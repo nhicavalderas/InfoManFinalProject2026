@@ -1,8 +1,7 @@
-// TODO: M1 — Initialize Supabase client
-// import { createClient } from '@supabase/supabase-js'
-// const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-// const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-// export const supabase = createClient(supabaseUrl, supabaseKey)
+import { createClient } from '@supabase/supabase-js'
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
+export const supabase = createClient(supabaseUrl, supabaseKey)
 
 // TODO: M1 — Employee API functions
 export const employeeApi = {
