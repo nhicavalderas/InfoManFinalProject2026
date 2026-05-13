@@ -1,24 +1,20 @@
 import { useEffect } from 'react'
-import LoadingSpinner from '../components/common/LoadingSpinner'
+import { useNavigate } from 'react-router-dom'
+import { supabase } from '../services/api'
 
-export default function AuthCallbackPage({ onComplete }) {
+export default function AuthCallbackPage() {
+  const navigate = useNavigate()
+
   useEffect(() => {
-    // TODO: M4 — Handle OAuth callback, exchange code for session
-    const timer = setTimeout(() => {
-      console.log('OAuth callback processed')
-      onComplete()
-    }, 2000)
-
-    return () => clearTimeout(timer)
-  }, [onComplete])
+    supabase.auth.exchangeCodeForSession(window.location.href).then(() => {
+      navigate('/employees')
+    })
+  }, [])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="text-center">
-        <LoadingSpinner size="lg" text="Setting up your session..." />
-        <p className="mt-4 text-gray-500 text-sm">
-          Please wait while we complete your authentication
-        </p>
+        <p className="text-gray-600">Setting up your session...</p>
       </div>
     </div>
   )

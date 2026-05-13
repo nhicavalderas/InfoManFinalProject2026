@@ -1,33 +1,40 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import AppShell from './components/layouts/AppShell'
 
-import Login from './pages/Login'
-import Register from './pages/Register'
-import AuthCallback from './pages/AuthCallback'
-import Employees from './pages/Employees'
-import JobHistory from './pages/JobHistory'
-import Jobs from './pages/Jobs'
-import Departments from './pages/Departments'
-import Admin from './pages/Admin'
-import DeletedItems from './pages/DeletedItems'
+// M2's full pages
+import LoginPage from './pages/LoginPage'
+import RegisterPage from './pages/RegisterPage'
+import AuthCallbackPage from './pages/AuthCallbackPage'
+import EmployeeListPage from './pages/EmployeeListPage'
+import JobHistoryPage from './pages/JobHistoryPage'
+import JobsPage from './pages/JobsPage'
+import DepartmentsPage from './pages/DepartmentsPage'
+import AdminPage from './pages/AdminPage'
+import DeletedItemsPage from './pages/DeletedItemsPage'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/auth/callback" element={<AuthCallback />} />
+        {/* Default redirect */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* Protected Routes */}
+        {/* Public Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
+
+        {/* Protected Routes — wrapped in AppShell for Navbar + Sidebar */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/employees" element={<Employees />} />
-          <Route path="/jobhistory" element={<JobHistory />} />
-          <Route path="/jobs" element={<Jobs />} />
-          <Route path="/departments" element={<Departments />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/deleted-items" element={<DeletedItems />} />
+          <Route element={<AppShell />}>
+            <Route path="/employees" element={<EmployeeListPage />} />
+            <Route path="/jobhistory" element={<JobHistoryPage />} />
+            <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/departments" element={<DepartmentsPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/deleted-items" element={<DeletedItemsPage />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
