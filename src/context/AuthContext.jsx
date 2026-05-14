@@ -7,10 +7,6 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
 
-  // TODO: M4 — Add onAuthStateChange listener
-  // TODO: M4 — Add login/logout functions
-  // TODO: M4 — Fetch user rights from user table
-
   const value = {
     user,
     isLoading,
