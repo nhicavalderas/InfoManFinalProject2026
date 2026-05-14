@@ -124,6 +124,7 @@ export const deptApi = {
   },
 }
 // TODO: M1 — Admin API functions
+// TODO: M1 — Admin API functions
 export const adminApi = {
   getUsers: async () => {
     const { data, error } = await supabase.from('user')
