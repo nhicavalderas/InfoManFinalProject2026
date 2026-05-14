@@ -25,7 +25,7 @@ function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/auth/callback" element={<AuthCallbackPage />} />
 
-        {/* Protected Routes */}
+        {/* Protected Routes — wrapped in AppShell for Navbar + Sidebar */}
         <Route element={<ProtectedRoute />}>
           <Route element={<AppShell />}>
             <Route path="/employees" element={<EmployeeListPage />} />
