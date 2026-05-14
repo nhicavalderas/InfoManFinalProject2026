@@ -1,9 +1,13 @@
-import { useState } from 'react'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import ProtectedRoute from './components/auth/ProtectedRoute'
+import AppShell from './components/layouts/AppShell'
+
+// M2's full pages
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import AuthCallbackPage from './pages/AuthCallbackPage'
-import AppShell from './components/layouts/AppShell'
 import EmployeeListPage from './pages/EmployeeListPage'
+import EmployeeDetailPage from './pages/EmployeeDetailPage'
 import JobHistoryPage from './pages/JobHistoryPage'
 import JobsPage from './pages/JobsPage'
 import DepartmentsPage from './pages/DepartmentsPage'
@@ -11,54 +15,30 @@ import AdminPage from './pages/AdminPage'
 import DeletedItemsPage from './pages/DeletedItemsPage'
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('login')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
-
-  const handleLogin = () => {
-    setIsAuthenticated(true)
-    setCurrentPage('employees')
-  }
-
-  const handleLogout = () => {
-    setIsAuthenticated(false)
-    setCurrentPage('login')
-  }
-
-  const navigate = (page) => setCurrentPage(page)
-
-  if (!isAuthenticated) {
-    switch (currentPage) {
-      case 'login':
-        return <LoginPage onLogin={handleLogin} onNavigate={navigate} />
-      case 'register':
-        return <RegisterPage onNavigate={navigate} />
-      case 'callback':
-        return <AuthCallbackPage onComplete={handleLogin} />
-      default:
-        return <LoginPage onLogin={handleLogin} onNavigate={navigate} />
-    }
-  }
-
-  const renderPage = () => {
-    switch (currentPage) {
-      case 'employees': return <EmployeeListPage />
-      case 'jobhistory': return <JobHistoryPage />
-      case 'jobs': return <JobsPage />
-      case 'departments': return <DepartmentsPage />
-      case 'admin': return <AdminPage />
-      case 'deleted': return <DeletedItemsPage />
-      default: return <EmployeeListPage />
-    }
-  }
-
   return (
-    <AppShell 
-      currentPage={currentPage} 
-      onNavigate={navigate} 
-      onLogout={handleLogout}
-    >
-      {renderPage()}
-    </AppShell>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" replace />} />
+
+        {/* Public Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/auth/callback" element={<AuthCallbackPage />} />
+
+        {/* Protected Routes — wrapped in AppShell for Navbar + Sidebar */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<AppShell />}>
+            <Route path="/employees" element={<EmployeeListPage />} />
+            <Route path="/employees/:empno" element={<EmployeeDetailPage />} />
+            <Route path="/jobhistory" element={<JobHistoryPage />} />
+            <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/departments" element={<DepartmentsPage />} />
+            <Route path="/admin" element={<AdminPage />} />
+            <Route path="/deleted-items" element={<DeletedItemsPage />} />
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
 

@@ -1,28 +1,21 @@
 import { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 import LoginForm from '../components/auth/LoginForm'
 
-export default function LoginPage({ onLogin, onNavigate }) {
+export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const { login, loginWithGoogle } = useAuth()
 
   const handleEmailSubmit = async ({ email, password }) => {
     setIsLoading(true)
     setError(null)
-    try {
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      console.log('Login attempt:', { email, password })
-      onLogin()
-    } catch (err) {
-      setError('Invalid email or password')
-    } finally {
-      setIsLoading(false)
-    }
+    const { error } = await login(email, password)
+    if (error) setError(error.message)
+    setIsLoading(false)
   }
 
-  const handleGoogleClick = () => {
-    console.log('Google OAuth clicked')
-    onNavigate('callback')
-  }
+  const handleGoogleClick = () => loginWithGoogle()
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -38,7 +31,7 @@ export default function LoginPage({ onLogin, onNavigate }) {
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <LoginForm 
+          <LoginForm
             onEmailSubmit={handleEmailSubmit}
             onGoogleClick={handleGoogleClick}
             isLoading={isLoading}
@@ -48,12 +41,9 @@ export default function LoginPage({ onLogin, onNavigate }) {
 
         <p className="text-center mt-6 text-sm text-gray-600">
           Don't have an account?{' '}
-          <button 
-            onClick={() => onNavigate('register')}
-            className="text-blue-600 hover:text-blue-700 font-medium"
-          >
+          <a href="/register" className="text-blue-600 hover:text-blue-700 font-medium">
             Register here
-          </button>
+          </a>
         </p>
       </div>
     </div>
