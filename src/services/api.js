@@ -35,11 +35,34 @@ export const employeeApi = {
 
 // TODO: M1 — Job History API functions
 export const jobHistoryApi = {
-  getByEmployee: async (empNo, userType) => { return [] },
-  add: async (data) => {},
-  update: async (data) => {},
-  softDelete: async (empNo, jobCode, effDate) => {},
-  recover: async (empNo, jobCode, effDate) => {}
+  getByEmployee: async (empNo, userType) => {
+    let query = supabase.from('jobhistory').select('*').eq('empno', empNo)
+    if (userType === 'USER') query = query.eq('record_status', 'ACTIVE')
+    const { data, error } = await query
+    if (error) throw error
+    return data
+  },
+  add: async (data) => {
+    const { error } = await supabase.from('jobhistory').insert(data)
+    if (error) throw error
+  },
+  update: async (data) => {
+    const { error } = await supabase.from('jobhistory')
+      .update(data).eq('empno', data.empno).eq('jobcode', data.jobcode).eq('effdate', data.effdate)
+    if (error) throw error
+  },
+  softDelete: async (empNo, jobCode, effDate, stamp) => {
+    const { error } = await supabase.from('jobhistory')
+      .update({ record_status: 'INACTIVE', stamp })
+      .eq('empno', empNo).eq('jobcode', jobCode).eq('effdate', effDate)
+    if (error) throw error
+  },
+  recover: async (empNo, jobCode, effDate, stamp) => {
+    const { error } = await supabase.from('jobhistory')
+      .update({ record_status: 'ACTIVE', stamp })
+      .eq('empno', empNo).eq('jobcode', jobCode).eq('effdate', effDate)
+    if (error) throw error
+  },
 }
 
 // TODO: M1 — Job API functions
