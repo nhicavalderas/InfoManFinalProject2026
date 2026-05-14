@@ -1,32 +1,33 @@
-import { createContext, useContext, useState } from 'react'
+import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { supabase } from '../../services/api'
 
-// TODO: M4 — Implement full auth context with Supabase
-export const AuthContext = createContext(null)
+function ProtectedRoute() {
+  const [session, setSession] = useState(undefined)
+  const location = useLocation()
 
-export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
 
-  // TODO: M4 — Add onAuthStateChange listener
-  // TODO: M4 — Add login/logout functions
-  // TODO: M4 — Fetch user rights from user table
+  if (session === undefined) return <div>Loading...</div>
 
-  const value = {
-    user,
-    isLoading,
-    isAuthenticated: !!user,
-    // TODO: M4 — Add login, logout, signUp functions
+  if (!session) return <Navigate to="/login" replace />
+
+  // Route guard: redirect USER type away from /deleted-items
+  // TODO: Replace 'USER' check with useRights() once M4 completes AuthContext
+  const userType = session?.user?.user_metadata?.user_type || 'USER'
+  if (location.pathname === '/deleted-items' && userType === 'USER') {
+    return <Navigate to="/employees" replace />
   }
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <Outlet />
 }
 
-export function useAuth() {
-  const context = useContext(AuthContext)
-  if (!context) throw new Error('useAuth must be used within AuthProvider')
-  return context
-}
+export default ProtectedRoute
