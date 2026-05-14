@@ -7,14 +7,30 @@ export const supabase = createClient(supabaseUrl, supabaseKey)
 // TODO: M1 — Employee API functions
 export const employeeApi = {
   getAll: async (userType) => {
-    // TODO: Filter by record_status if userType === 'USER'
-    console.log('getEmployees called with:', userType)
-    return []
+    let query = supabase.from('employee').select('*')
+    if (userType === 'USER') query = query.eq('record_status', 'ACTIVE')
+    const { data, error } = await query
+    if (error) throw error
+    return data
   },
-  add: async (data) => { console.log('addEmployee:', data) },
-  update: async (empno, data) => { console.log('updateEmployee:', empno, data) },
-  softDelete: async (empno, userId) => { console.log('softDeleteEmployee:', empno, userId) },
-  recover: async (empno, userId) => { console.log('recoverEmployee:', empno, userId) }
+  add: async (data) => {
+    const { error } = await supabase.from('employee').insert(data)
+    if (error) throw error
+  },
+  update: async (empno, data) => {
+    const { error } = await supabase.from('employee').update(data).eq('empno', empno)
+    if (error) throw error
+  },
+  softDelete: async (empno, stamp) => {
+    const { error } = await supabase.from('employee')
+      .update({ record_status: 'INACTIVE', stamp }).eq('empno', empno)
+    if (error) throw error
+  },
+  recover: async (empno, stamp) => {
+    const { error } = await supabase.from('employee')
+      .update({ record_status: 'ACTIVE', stamp }).eq('empno', empno)
+    if (error) throw error
+  },
 }
 
 // TODO: M1 — Job History API functions
