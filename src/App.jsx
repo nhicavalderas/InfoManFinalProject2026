@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import AuthCallbackPage from './pages/AuthCallbackPage'
 import EmployeeListPage from './pages/EmployeeListPage'
+import EmployeeDetailPage from './pages/EmployeeDetailPage'
 import JobHistoryPage from './pages/JobHistoryPage'
 import JobsPage from './pages/JobsPage'
 import DepartmentsPage from './pages/DepartmentsPage'
@@ -17,7 +18,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Default redirect */}
         <Route path="/" element={<Navigate to="/login" replace />} />
 
         {/* Public Routes */}
@@ -29,6 +29,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route element={<AppShell />}>
             <Route path="/employees" element={<EmployeeListPage />} />
+            <Route path="/employees/:empno" element={<EmployeeDetailPage />} />
             <Route path="/jobhistory" element={<JobHistoryPage />} />
             <Route path="/jobs" element={<JobsPage />} />
             <Route path="/departments" element={<DepartmentsPage />} />

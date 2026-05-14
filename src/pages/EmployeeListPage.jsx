@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Table from '../components/common/Table'
 import Button from '../components/common/Button'
 import Modal from '../components/common/Modal'
+import { useNavigate } from 'react-router-dom'
 import Input from '../components/common/Input'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 
@@ -13,6 +14,7 @@ const MOCK_EMPLOYEES = [
 const EMPTY_FORM = { empno: '', lastname: '', firstname: '', middlename: '', address: '', birthdate: '', hiredate: '', gender: 'M', status: 'REGULAR', deptCode: '', jobCode: '' }
 
 export default function EmployeeListPage() {
+  const navigate = useNavigate()
   const [employees, setEmployees] = useState(MOCK_EMPLOYEES)
   const [search, setSearch] = useState('')
   const [showModal, setShowModal] = useState(false)
@@ -101,7 +103,13 @@ export default function EmployeeListPage() {
         />
       </div>
 
-      <Table columns={columns} data={filtered} emptyMessage="No employees found" keyExtractor={r => r.empno} />
+      <Table
+  columns={columns}
+  data={filtered}
+  emptyMessage="No employees found"
+  keyExtractor={r => r.empno}
+  onRowClick={(row) => navigate(`/employees/${row.empno}`)}
+/>
 
       <Modal
         isOpen={showModal}
