@@ -122,3 +122,22 @@ export const deptApi = {
     if (error) throw error
   },
 }
+// TODO: M1 — Reports API functions
+export const reportsApi = {
+  getHeadcountByDept: async () => {
+    const { data, error } = await supabase.from('headcount_by_dept').select('*')
+    if (error) throw error
+    return data
+  },
+  getSalarySummaryByJob: async () => {
+    const { data, error } = await supabase.from('salary_summary_by_job').select('*')
+    if (error) throw error
+    return data
+  },
+  getEmployeeFullHistory: async (empNo) => {
+    const { data, error } = await supabase.from('jobhistory')
+      .select('*').eq('empno', empNo)
+    if (error) throw error
+    return data
+  },
+}
