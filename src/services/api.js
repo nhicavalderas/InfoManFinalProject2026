@@ -67,25 +67,58 @@ export const jobHistoryApi = {
 
 // TODO: M1 — Job API functions
 export const jobApi = {
-  getAll: async (userType) => { return [] },
-  add: async (data) => {},
-  update: async (jobCode, data) => {},
-  softDelete: async (jobCode, userId) => {},
-  recover: async (jobCode, userId) => {}
+  getAll: async (userType) => {
+    let query = supabase.from('job').select('*')
+    if (userType === 'USER') query = query.eq('record_status', 'ACTIVE')
+    const { data, error } = await query
+    if (error) throw error
+    return data
+  },
+  add: async (data) => {
+    const { error } = await supabase.from('job').insert(data)
+    if (error) throw error
+  },
+  update: async (jobCode, data) => {
+    const { error } = await supabase.from('job').update(data).eq('jobcode', jobCode)
+    if (error) throw error
+  },
+  softDelete: async (jobCode, stamp) => {
+    const { error } = await supabase.from('job')
+      .update({ record_status: 'INACTIVE', stamp }).eq('jobcode', jobCode)
+    if (error) throw error
+  },
+  recover: async (jobCode, stamp) => {
+    const { error } = await supabase.from('job')
+      .update({ record_status: 'ACTIVE', stamp }).eq('jobcode', jobCode)
+    if (error) throw error
+  },
 }
 
 // TODO: M1 — Department API functions
 export const deptApi = {
-  getAll: async (userType) => { return [] },
-  add: async (data) => {},
-  update: async (deptCode, data) => {},
-  softDelete: async (deptCode, userId) => {},
-  recover: async (deptCode, userId) => {}
-}
-
-// TODO: M1 — Admin API functions
-export const adminApi = {
-  getUsers: async () => { return [] },
-  activateUser: async (userId) => {},
-  deactivateUser: async (userId) => {}
+  getAll: async (userType) => {
+    let query = supabase.from('department').select('*')
+    if (userType === 'USER') query = query.eq('record_status', 'ACTIVE')
+    const { data, error } = await query
+    if (error) throw error
+    return data
+  },
+  add: async (data) => {
+    const { error } = await supabase.from('department').insert(data)
+    if (error) throw error
+  },
+  update: async (deptCode, data) => {
+    const { error } = await supabase.from('department').update(data).eq('deptcode', deptCode)
+    if (error) throw error
+  },
+  softDelete: async (deptCode, stamp) => {
+    const { error } = await supabase.from('department')
+      .update({ record_status: 'INACTIVE', stamp }).eq('deptcode', deptCode)
+    if (error) throw error
+  },
+  recover: async (deptCode, stamp) => {
+    const { error } = await supabase.from('department')
+      .update({ record_status: 'ACTIVE', stamp }).eq('deptcode', deptCode)
+    if (error) throw error
+  },
 }
