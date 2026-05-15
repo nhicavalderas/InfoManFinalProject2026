@@ -141,6 +141,8 @@ export const adminApi = {
       .update({ record_status: 'INACTIVE' })
       .eq('userId', userId).neq('user_type', 'SUPERADMIN')
     if (error) throw error
+  },
+}
 // TODO: M1 — Reports API functions
 export const reportsApi = {
   getHeadcountByDept: async () => {
