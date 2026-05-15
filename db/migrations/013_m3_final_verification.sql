@@ -1,35 +1,41 @@
 -- M3 Final Verification
 -- Purpose:
--- This script checks database tables, views, policies, triggers, modules, and rights.
--- This is for verification only. It does not change or delete data.
+-- This script verifies the database objects required for the Hope HR System.
+-- This is for checking only. It does not modify, delete, or update data.
 
--- 1. Check all public tables
+-- 1. Count public tables, views, policies, and triggers
 SELECT 
-  schemaname,
-  tablename
-FROM pg_tables
-WHERE schemaname = 'public'
-ORDER BY tablename;
+  'tables' AS object_type,
+  COUNT(*) AS total
+FROM information_schema.tables
+WHERE table_schema = 'public'
 
--- 2. Check all public views
-SELECT 
-  schemaname,
-  viewname
-FROM pg_views
-WHERE schemaname = 'public'
-ORDER BY viewname;
+UNION ALL
 
--- 3. Check all RLS policies
 SELECT 
-  schemaname,
-  tablename,
-  policyname,
-  cmd
+  'views' AS object_type,
+  COUNT(*) AS total
+FROM information_schema.views
+WHERE table_schema = 'public'
+
+UNION ALL
+
+SELECT 
+  'policies' AS object_type,
+  COUNT(*) AS total
 FROM pg_policies
 WHERE schemaname = 'public'
-ORDER BY tablename, policyname;
 
--- 4. Check required HR tables
+UNION ALL
+
+SELECT 
+  'triggers' AS object_type,
+  COUNT(*) AS total
+FROM information_schema.triggers
+WHERE trigger_schema IN ('public', 'auth');
+
+
+-- 2. Verify HR tables
 SELECT 
   table_name
 FROM information_schema.tables
@@ -42,7 +48,8 @@ AND table_name IN (
 )
 ORDER BY table_name;
 
--- 5. Check required user/rights tables
+
+-- 3. Verify rights/user tables
 SELECT 
   table_name
 FROM information_schema.tables
@@ -56,43 +63,61 @@ AND table_name IN (
 )
 ORDER BY table_name;
 
--- 6. Check record_status and stamp columns
+
+-- 4. Verify record_status and stamp columns
 SELECT 
   table_name,
   column_name,
   data_type
 FROM information_schema.columns
 WHERE table_schema = 'public'
-AND table_name IN ('employee', 'jobhistory', 'job', 'department')
-AND column_name IN ('record_status', 'stamp')
+AND table_name IN (
+  'employee',
+  'jobhistory',
+  'job',
+  'department'
+)
+AND column_name IN (
+  'record_status',
+  'stamp'
+)
 ORDER BY table_name, column_name;
 
--- 7. Check report/helper views
+
+-- 5. Verify SQL views
 SELECT 
-  table_name AS view_name
-FROM information_schema.views
-WHERE table_schema = 'public'
-AND table_name IN (
+  viewname
+FROM pg_views
+WHERE schemaname = 'public'
+AND viewname IN (
   'employee_current_job',
   'headcount_by_dept',
   'salary_summary_by_job',
   'employee_full_history'
 )
-ORDER BY table_name;
+ORDER BY viewname;
 
--- 8. Check employee cascade trigger
+
+-- 6. Verify RLS policies
 SELECT 
-  trigger_name,
-  event_manipulation,
-  event_object_table,
-  action_statement
-FROM information_schema.triggers
-WHERE trigger_name IN (
-  'trg_cascade_employee_status',
-  'on_employee_status_change'
-);
+  tablename,
+  policyname,
+  cmd
+FROM pg_policies
+WHERE schemaname = 'public'
+AND tablename IN (
+  'employee',
+  'jobhistory',
+  'job',
+  'department',
+  'user',
+  'user_module',
+  'UserModule_Rights'
+)
+ORDER BY tablename, policyname;
 
--- 9. Check auth auto-provision trigger
+
+-- 7. Verify triggers
 SELECT 
   trigger_name,
   event_manipulation,
@@ -100,14 +125,17 @@ SELECT
   event_object_table,
   action_statement
 FROM information_schema.triggers
-WHERE trigger_name = 'on_auth_user_created';
+WHERE trigger_schema IN ('public', 'auth')
+ORDER BY trigger_name;
 
--- 10. Check module seed data
+
+-- 8. Verify module seed data
 SELECT *
 FROM "Module"
 ORDER BY moduleid;
 
--- 11. Check rights seed data
+
+-- 9. Verify rights seed data
 SELECT *
 FROM rights
 ORDER BY rightid;
