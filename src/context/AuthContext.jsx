@@ -7,11 +7,23 @@
  * - Manages user session (login, logout, signup)
  * - Loads user's 17 rights from UserModule_Rights table
  * - Implements login guard (only ACTIVE users can log in)
+ * Date: May 2026
+ * 
+ * PURPOSE:
+ * - Provides global auth state to the entire React app
+ * - Manages user session (login, logout, signup, Google OAuth)
+ * - Loads user's 17 rights from UserModule_Rights table
+ * - Implements login guard (only ACTIVE users can log in)
+ * 
+ * HOW TO USE:
+ * - Wrap your app with <AuthProvider>
+ * - Use useAuth() hook in any component to access user and auth functions
  */
 
 import { createContext, useContext, useState, useEffect } from 'react'
 import { supabase } from '../services/api'
 
+// Create the context object that components will consume
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
@@ -88,6 +100,8 @@ export function AuthProvider({ children }) {
   const login = (email, password) => supabase.auth.signInWithPassword({ email, password })
   
   // Email/Password sign up
+  const login = (email, password) => supabase.auth.signInWithPassword({ email, password })
+  
   const signUp = (email, password, meta) => supabase.auth.signUp({ 
     email, password, options: { data: meta } 
   })

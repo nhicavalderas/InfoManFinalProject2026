@@ -1,6 +1,7 @@
 /**
  * useRights.js - Custom Hook for Rights/Permissions Checking
  * Author: M4 - Rights & Auth Specialist
+ * Date: May 2026
  * 
  * PURPOSE:
  * - Provides easy access to user's rights throughout the app
@@ -29,6 +30,8 @@ export function useRights() {
    * hasRight - Check if user has a specific right
    * @param {string} key - Right ID (e.g., 'EMP_ADD', 'EMP_VIEW', 'ADM_USER')
    * @returns {boolean} - True if user has the right
+   * 
+   * Example: hasRight('EMP_ADD') returns true for ADMIN/SUPERADMIN, false for USER
    */
   const hasRight = (key) => rights[key] === true
   
