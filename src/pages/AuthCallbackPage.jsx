@@ -2,8 +2,8 @@
  * AuthCallbackPage.jsx - Handles Google OAuth Redirect Callback
  * 
  * PURPOSE:
- * - Receives the OAuth callback from Google after user signs in
- * - Exchanges the authorization code for a Supabase session
+ * - Receives OAuth callback from Google after user signs in
+ * - Exchanges authorization code for Supabase session
  * - Redirects to /employees on success, /login on failure
  */
 
@@ -18,11 +18,9 @@ export default function AuthCallbackPage() {
     // Exchange the OAuth code for a Supabase session
     supabase.auth.exchangeCodeForSession(window.location.href)
       .then(() => {
-        // Success - user is now authenticated
         navigate('/employees')
       })
       .catch(() => {
-        // Failure - send user back to login page
         navigate('/login')
       })
   }, [navigate])

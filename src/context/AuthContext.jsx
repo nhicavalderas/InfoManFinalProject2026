@@ -4,13 +4,6 @@
  * 
  * PURPOSE:
  * - Provides global auth state to the entire React app
- * - Manages user session (login, logout, signup)
- * - Loads user's 17 rights from UserModule_Rights table
- * - Implements login guard (only ACTIVE users can log in)
- * Date: May 2026
- * 
- * PURPOSE:
- * - Provides global auth state to the entire React app
  * - Manages user session (login, logout, signup, Google OAuth)
  * - Loads user's 17 rights from UserModule_Rights table
  * - Implements login guard (only ACTIVE users can log in)
@@ -23,7 +16,6 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { supabase } from '../services/api'
 
-// Create the context object that components will consume
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
@@ -50,7 +42,7 @@ export function AuthProvider({ children }) {
 
     // CASE 2: User is logged in - fetch their data from our 'user' table
     const { data: row } = await supabase.from('user')
-      .select('*').eq('userId', session.user.id).single()
+      .select('*').eq('userid', session.user.id).single()
 
     // LOGIN GUARD: Check if user exists AND is ACTIVE
     if (!row || row.record_status !== 'ACTIVE') {
@@ -63,11 +55,11 @@ export function AuthProvider({ children }) {
 
     // Fetch user's rights from UserModule_Rights table (all 17 rights)
     const { data: rightsRows } = await supabase.from('UserModule_Rights')
-      .select('rightId, right_value').eq('userId', session.user.id)
+      .select('rightid, right_value').eq('userid', session.user.id)
 
-    // Convert rights array to a map for O(1) lookup: { EMP_VIEW: true, EMP_ADD: false, ... }
+    // Convert rights array to a map for O(1) lookup
     const rightsMap = {}
-    rightsRows?.forEach(r => { rightsMap[r.rightId] = r.right_value === 1 })
+    rightsRows?.forEach(r => { rightsMap[r.rightid] = r.right_value === 1 })
 
     // Update state with user data and rights
     setUser(session.user)
@@ -100,8 +92,6 @@ export function AuthProvider({ children }) {
   const login = (email, password) => supabase.auth.signInWithPassword({ email, password })
   
   // Email/Password sign up
-  const login = (email, password) => supabase.auth.signInWithPassword({ email, password })
-  
   const signUp = (email, password, meta) => supabase.auth.signUp({ 
     email, password, options: { data: meta } 
   })
@@ -117,15 +107,15 @@ export function AuthProvider({ children }) {
 
   // ========== PROVIDER RETURN ==========
   const value = {
-    user,           // Supabase auth user object
-    userRow,        // Custom user row (user_type, record_status, etc.)
-    rights,         // Map of 17 rights (boolean values)
-    isLoading,      // Loading state for showing spinners
-    isAuthenticated: !!user,  // True if user is logged in
-    login,          // Email/password login function
-    signUp,         // Email/password registration function
-    loginWithGoogle,// Google OAuth login function
-    logout          // Logout function
+    user,
+    userRow,
+    rights,
+    isLoading,
+    isAuthenticated: !!user,
+    login,
+    signUp,
+    loginWithGoogle,
+    logout
   }
 
   return (
