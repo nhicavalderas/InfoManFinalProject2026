@@ -17,16 +17,12 @@ function ProtectedRoute() {
   }, [])
 
   if (session === undefined) return <div>Loading...</div>
-
   if (!session) return <Navigate to="/login" replace />
 
-  // Route guard: redirect USER type away from /deleted-items
-  // TODO: Replace 'USER' check with useRights() once M4 completes AuthContext
   const userType = session?.user?.user_metadata?.user_type || 'USER'
   if (location.pathname === '/deleted-items' && userType === 'USER') {
     return <Navigate to="/employees" replace />
   }
-
   return <Outlet />
 }
 

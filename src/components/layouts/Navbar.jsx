@@ -1,44 +1,33 @@
-import { LogOut, Menu, User } from 'lucide-react'
-import Button from '../common/Button'
+import { Menu, LogOut, User } from 'lucide-react'
 
-export default function Navbar({ userName = 'HR Staff', onMenuClick, onLogout }) {
+export default function Navbar({ onMenuClick, onLogout }) {
   return (
-    <nav className="bg-white border-b border-gray-200 px-4 py-3 sticky top-0 z-30">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Button 
-            variant="ghost" 
-            onClick={onMenuClick}
-            className="lg:hidden p-2"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
-          
-          <div className="flex items-center gap-2">
-            <div className="bg-blue-600 text-white p-1.5 rounded-lg">
-              <User className="h-5 w-5" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-gray-900 leading-tight">Hope HR</h1>
-              <p className="text-xs text-gray-500">Human Resource System</p>
-            </div>
+    <header className="h-14 bg-white border-b border-gray-100 flex items-center justify-between px-4 lg:px-6 flex-shrink-0 shadow-sm">
+      <button
+        onClick={onMenuClick}
+        className="lg:hidden p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+
+      <div className="hidden lg:block" />
+
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 px-3 py-1.5 bg-gray-50 rounded-xl border border-gray-200">
+          <div className="w-6 h-6 bg-hope-100 rounded-lg flex items-center justify-center">
+            <User className="h-3.5 w-3.5 text-hope-600" />
           </div>
+          <span className="text-sm font-medium text-gray-700">HR Staff</span>
         </div>
-        
-        <div className="flex items-center gap-4">
-          <div className="hidden sm:flex items-center gap-2 text-sm text-gray-600">
-            <div className="bg-gray-100 p-1.5 rounded-full">
-              <User className="h-4 w-4" />
-            </div>
-            <span className="font-medium">{userName}</span>
-          </div>
-          
-          <Button variant="ghost" onClick={onLogout} className="text-red-600 hover:text-red-700 hover:bg-red-50">
-            <LogOut className="h-4 w-4" />
-            <span className="hidden sm:inline">Logout</span>
-          </Button>
-        </div>
+
+        <button
+          onClick={onLogout}
+          className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-150"
+        >
+          <LogOut className="h-4 w-4" />
+          <span className="hidden sm:inline">Logout</span>
+        </button>
       </div>
-    </nav>
+    </header>
   )
 }
