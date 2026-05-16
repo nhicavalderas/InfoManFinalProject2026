@@ -1,6 +1,12 @@
 /**
  * AuthContext.jsx - Authentication Context for Hope HR System
  * Author: M4 - Rights & Auth Specialist
+ * 
+ * PURPOSE:
+ * - Provides global auth state to the entire React app
+ * - Manages user session (login, logout, signup)
+ * - Loads user's 17 rights from UserModule_Rights table
+ * - Implements login guard (only ACTIVE users can log in)
  * Date: May 2026
  * 
  * PURPOSE:
@@ -89,17 +95,24 @@ export function AuthProvider({ children }) {
   }, [])
 
   // ========== AUTH FUNCTIONS ==========
+  
+  // Email/Password login
+  const login = (email, password) => supabase.auth.signInWithPassword({ email, password })
+  
+  // Email/Password sign up
   const login = (email, password) => supabase.auth.signInWithPassword({ email, password })
   
   const signUp = (email, password, meta) => supabase.auth.signUp({ 
     email, password, options: { data: meta } 
   })
   
+  // Google OAuth login
   const loginWithGoogle = () => supabase.auth.signInWithOAuth({ 
     provider: 'google', 
     options: { redirectTo: window.location.origin + '/auth/callback' } 
   })
   
+  // Logout
   const logout = () => supabase.auth.signOut()
 
   // ========== PROVIDER RETURN ==========
