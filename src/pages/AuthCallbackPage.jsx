@@ -15,18 +15,12 @@ export default function AuthCallbackPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log('AuthCallbackPage loaded - URL:', window.location.href)
-    
-    // Exchange the OAuth code for a session
+    // Exchange the OAuth code for a Supabase session
     supabase.auth.exchangeCodeForSession(window.location.href)
-      .then((result) => {
-        console.log('Exchange successful:', result)
+      .then(() => {
         navigate('/employees')
       })
-      .catch((error) => {
-        console.error('Exchange failed:', error)
-        console.error('Error message:', error.message)
-        console.error('Error status:', error.status)
+      .catch(() => {
         navigate('/login')
       })
   }, [navigate])
