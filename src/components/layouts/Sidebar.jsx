@@ -1,15 +1,18 @@
 import { Users, Clock, Briefcase, Building2, Shield, Trash2 } from 'lucide-react'
+import { useRights } from '../../hooks/useRights'
 
 const NAV_ITEMS = [
   { id: 'employees', label: 'Employees', icon: Users },
   { id: 'jobhistory', label: 'Job History', icon: Clock },
   { id: 'jobs', label: 'Jobs', icon: Briefcase },
   { id: 'departments', label: 'Departments', icon: Building2 },
-  { id: 'admin', label: 'Admin', icon: Shield },
-  { id: 'deleted-items', label: 'Deleted Items', icon: Trash2 },
+  { id: 'admin', label: 'Admin', icon: Shield, adminOnly: true },
+  { id: 'deleted-items', label: 'Deleted Items', icon: Trash2, adminOnly: true },
 ]
 
 export default function Sidebar({ currentPage, onNavigate, isOpen, onClose }) {
+  const { isAdmin } = useRights()
+
   return (
     <>
       {isOpen && (
@@ -32,7 +35,8 @@ export default function Sidebar({ currentPage, onNavigate, isOpen, onClose }) {
         </div>
 
         <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-          {NAV_ITEMS.map(({ id, label, icon: Icon }) => {
+          {NAV_ITEMS.map(({ id, label, icon: Icon, adminOnly }) => {
+            if (adminOnly && !isAdmin) return null
             const isActive = currentPage === id || currentPage.startsWith(id)
             return (
               <button
@@ -52,8 +56,8 @@ export default function Sidebar({ currentPage, onNavigate, isOpen, onClose }) {
         </nav>
 
         <div className="px-4 py-3 border-t border-hope-800">
-          <p className="text-xs text-hope-500 font-medium">Sprint 1 Preview</p>
-          <p className="text-xs text-hope-600 mt-0.5">Some links are gated for admin users only.</p>
+          <p className="text-xs text-hope-500 font-medium">Hope HR System</p>
+          <p className="text-xs text-hope-600 mt-0.5">{isAdmin ? 'Admin Access' : 'User Access'}</p>
         </div>
       </aside>
     </>
