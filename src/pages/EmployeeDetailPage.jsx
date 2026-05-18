@@ -5,6 +5,7 @@ import Table from '../components/common/Table'
 import Modal from '../components/common/Modal'
 import Input from '../components/common/Input'
 import LoadingSpinner from '../components/common/LoadingSpinner'
+import { useRights } from '../hooks/useRights'
 import { ArrowLeft, Plus, Pencil, Trash2 } from 'lucide-react'
 import { employeeApi, jobHistoryApi } from '../services/api'
 
@@ -13,7 +14,7 @@ const EMPTY_JH = { jobCode: '', jobDesc: '', deptCode: '', deptName: '', effDate
 export default function EmployeeDetailPage() {
   const { empno } = useParams()
   const navigate = useNavigate()
-
+  const { hasRight } = useRights()
   const [employee, setEmployee] = useState(null)
   const [jobHistory, setJobHistory] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -95,12 +96,16 @@ export default function EmployeeDetailPage() {
       key: 'actions', label: 'Actions',
       render: (row) => (
         <div className="flex gap-2">
-          <button onClick={() => handleEdit(row)} className="p-1 text-blue-600 hover:bg-blue-50 rounded">
-            <Pencil className="h-4 w-4" />
-          </button>
-          <button onClick={() => handleDelete(row)} className="p-1 text-red-600 hover:bg-red-50 rounded">
-            <Trash2 className="h-4 w-4" />
-          </button>
+          {hasRight('JH_EDIT') && (
+            <button onClick={() => handleEdit(row)} className="p-1 text-blue-600 hover:bg-blue-50 rounded">
+              <Pencil className="h-4 w-4" />
+            </button>
+          )}
+          {hasRight('JH_DEL') && (
+            <button onClick={() => handleDelete(row)} className="p-1 text-red-600 hover:bg-red-50 rounded">
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
         </div>
       )
     }
@@ -177,9 +182,11 @@ export default function EmployeeDetailPage() {
             <h2 className="text-lg font-bold text-gray-900">Job History</h2>
             <p className="text-gray-500 text-sm">All job assignments sorted by most recent</p>
           </div>
-          <Button onClick={handleAdd} className="flex items-center gap-2">
-            <Plus className="h-4 w-4" /> Add Record
-          </Button>
+          {hasRight('JH_ADD') && (
+  <Button onClick={handleAdd} className="flex items-center gap-2">
+    <Plus className="h-4 w-4" /> Add Record
+  </Button>
+)}
         </div>
 
         <Table columns={columns} data={jobHistory}

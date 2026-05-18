@@ -6,10 +6,12 @@ import Input from '../components/common/Input'
 import LoadingSpinner from '../components/common/LoadingSpinner'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import { jobApi } from '../services/api'
+import { useRights } from '../hooks/useRights'
 
 const EMPTY_FORM = { jobCode: '', jobTitle: '', jobDesc: '' }
 
 export default function JobsPage() {
+  const { hasRight } = useRights()
   const [jobs, setJobs] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -42,11 +44,8 @@ export default function JobsPage() {
   const handleSave = async () => {
     try {
       setIsSaving(true)
-      if (editTarget) {
-        await jobApi.update(editTarget.jobCode, form)
-      } else {
-        await jobApi.add(form)
-      }
+      if (editTarget) { await jobApi.update(editTarget.jobCode, form) }
+      else { await jobApi.add(form) }
       await loadJobs()
       setShowModal(false)
     } catch (err) {
@@ -79,14 +78,16 @@ export default function JobsPage() {
       key: 'actions', label: 'Actions',
       render: (row) => (
         <div className="flex gap-2">
-          {/* TODO: M4 — gate by JOB_EDIT */}
-          <button onClick={(e) => { e.stopPropagation(); handleEdit(row) }} className="p-1 text-blue-600 hover:bg-blue-50 rounded">
-            <Pencil className="h-4 w-4" />
-          </button>
-          {/* TODO: M4 — gate by JOB_DEL */}
-          <button onClick={(e) => { e.stopPropagation(); handleDelete(row) }} className="p-1 text-red-600 hover:bg-red-50 rounded">
-            <Trash2 className="h-4 w-4" />
-          </button>
+          {hasRight('JOB_EDIT') && (
+            <button onClick={(e) => { e.stopPropagation(); handleEdit(row) }} className="p-1 text-blue-600 hover:bg-blue-50 rounded">
+              <Pencil className="h-4 w-4" />
+            </button>
+          )}
+          {hasRight('JOB_DEL') && (
+            <button onClick={(e) => { e.stopPropagation(); handleDelete(row) }} className="p-1 text-red-600 hover:bg-red-50 rounded">
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
         </div>
       )
     }
@@ -101,10 +102,11 @@ export default function JobsPage() {
           <h1 className="text-2xl font-bold text-gray-900">Jobs</h1>
           <p className="text-gray-500">Manage job codes and titles</p>
         </div>
-        {/* TODO: M4 — gate by JOB_ADD */}
-        <Button onClick={handleAdd} className="flex items-center gap-2">
-          <Plus className="h-4 w-4" /> Add Job
-        </Button>
+        {hasRight('JOB_ADD') && (
+          <Button onClick={handleAdd} className="flex items-center gap-2">
+            <Plus className="h-4 w-4" /> Add Job
+          </Button>
+        )}
       </div>
 
       {error && (
