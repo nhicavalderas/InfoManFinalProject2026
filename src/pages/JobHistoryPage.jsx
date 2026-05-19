@@ -4,6 +4,7 @@ import Button from '../components/common/Button'
 import Modal from '../components/common/Modal'
 import Input from '../components/common/Input'
 import LoadingSpinner from '../components/common/LoadingSpinner'
+import { useRights } from '../hooks/useRights'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import { jobHistoryApi } from '../services/api'
 
@@ -20,6 +21,7 @@ export default function JobHistoryPage() {
   const [showConfirm, setShowConfirm] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [isSaving, setIsSaving] = useState(false)
+  const { hasRight, isAdmin } = useRights()
 
   useEffect(() => { loadHistory() }, [])
 
@@ -82,18 +84,24 @@ export default function JobHistoryPage() {
     { key: 'deptCode', label: 'Dept Code' },
     { key: 'effDate', label: 'Effective Date' },
     { key: 'salary', label: 'Salary', render: (row) => row.salary ? `₱${Number(row.salary).toLocaleString()}` : '-' },
+    ...(isAdmin ? [{
+      key: 'stamp', label: 'Last Modified By',
+      render: (row) => <span className="text-xs text-gray-400">{row.stamp || '—'}</span>
+    }] : []),
     {
       key: 'actions', label: 'Actions',
       render: (row) => (
         <div className="flex gap-2">
-          {/* TODO: M4 — gate by JH_EDIT */}
-          <button onClick={(e) => { e.stopPropagation(); handleEdit(row) }} className="p-1 text-blue-600 hover:bg-blue-50 rounded">
-            <Pencil className="h-4 w-4" />
-          </button>
-          {/* TODO: M4 — gate by JH_DEL */}
-          <button onClick={(e) => { e.stopPropagation(); handleDelete(row) }} className="p-1 text-red-600 hover:bg-red-50 rounded">
-            <Trash2 className="h-4 w-4" />
-          </button>
+          {hasRight('JH_EDIT') && (
+            <button onClick={(e) => { e.stopPropagation(); handleEdit(row) }} className="p-1 text-blue-600 hover:bg-blue-50 rounded">
+              <Pencil className="h-4 w-4" />
+            </button>
+          )}
+          {hasRight('JH_DEL') && (
+            <button onClick={(e) => { e.stopPropagation(); handleDelete(row) }} className="p-1 text-red-600 hover:bg-red-50 rounded">
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
         </div>
       )
     }
@@ -108,7 +116,11 @@ export default function JobHistoryPage() {
           <h1 className="text-2xl font-bold text-gray-900">Job History</h1>
           <p className="text-gray-500">Track employee job assignments</p>
         </div>
-        {/* TODO: M4 — gate by JH_ADD */}
+        {hasRight('JH_ADD') && (
+  <Button onClick={handleAdd} className="flex items-center gap-2">
+    <Plus className="h-4 w-4" /> Add Record
+  </Button>
+)}
         <Button onClick={handleAdd} className="flex items-center gap-2">
           <Plus className="h-4 w-4" /> Add Record
         </Button>

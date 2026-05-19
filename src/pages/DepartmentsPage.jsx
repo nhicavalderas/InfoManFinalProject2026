@@ -11,7 +11,7 @@ import { useRights } from '../hooks/useRights'
 const EMPTY_FORM = { deptCode: '', deptName: '' }
 
 export default function DepartmentsPage() {
-  const { hasRight } = useRights()
+  const { hasRight, isAdmin } = useRights()
   const [depts, setDepts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -73,6 +73,10 @@ export default function DepartmentsPage() {
   const columns = [
     { key: 'deptCode', label: 'Dept Code' },
     { key: 'deptName', label: 'Department Name' },
+    ...(isAdmin ? [{
+      key: 'stamp', label: 'Last Modified By',
+      render: (row) => <span className="text-xs text-gray-400">{row.stamp || '—'}</span>
+    }] : []),
     {
       key: 'actions', label: 'Actions',
       render: (row) => (
