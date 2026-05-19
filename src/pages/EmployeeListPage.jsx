@@ -13,7 +13,7 @@ const EMPTY_FORM = { empno: '', lastname: '', firstname: '', middlename: '', add
 
 export default function EmployeeListPage() {
   const navigate = useNavigate()
-  const { hasRight } = useRights()
+  const { hasRight, isAdmin } = useRights()
   const [employees, setEmployees] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -96,6 +96,10 @@ export default function EmployeeListPage() {
         }`}>{row.status}</span>
       )
     },
+    ...(isAdmin ? [{
+      key: 'stamp', label: 'Last Modified By',
+      render: (row) => <span className="text-xs text-gray-400">{row.stamp || '—'}</span>
+    }] : []),
     {
       key: 'actions', label: 'Actions',
       render: (row) => (
