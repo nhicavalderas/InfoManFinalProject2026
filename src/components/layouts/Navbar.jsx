@@ -1,6 +1,15 @@
 import { Menu, LogOut, User } from 'lucide-react'
+import { useAuth } from '../../context/AuthContext'
 
 export default function Navbar({ onMenuClick, onLogout }) {
+  const { userRow, user } = useAuth()
+
+  const displayName = userRow?.username || 
+    user?.email?.split('@')[0] || 
+    'HR Staff'
+
+  const displayRole = userRow?.user_type || 'USER'
+
   return (
     <header className="h-14 bg-white border-b border-gray-100 flex items-center justify-between px-4 lg:px-6 flex-shrink-0 shadow-sm">
       <button
@@ -17,7 +26,10 @@ export default function Navbar({ onMenuClick, onLogout }) {
           <div className="w-6 h-6 bg-hope-100 rounded-lg flex items-center justify-center">
             <User className="h-3.5 w-3.5 text-hope-600" />
           </div>
-          <span className="text-sm font-medium text-gray-700">HR Staff</span>
+          <div className="flex flex-col">
+            <span className="text-sm font-medium text-gray-700 leading-tight">{displayName}</span>
+            <span className="text-xs text-hope-600 font-medium leading-tight">{displayRole}</span>
+          </div>
         </div>
 
         <button
