@@ -1,118 +1,46 @@
-Team Members & Responsibilities
-Role	Member	Main Responsibilities	Progress
-M1 — Project Lead	Nhica Valderas	Project setup, deployment, API wiring, GitHub management, Supabase integration	90%
-M2 — Frontend Developer	Jovin Lowell Dula	Frontend UI/UX, page development, API integration, rights gating	95%
-M3 — Database Engineer	Jhunelle Remo	Database schema, RLS policies, triggers, Supabase backend	98%
-M4 — Rights & Authentication	Shpsall	Authentication, AuthContext, role permissions, Google OAuth	80%
-M5 — QA & Documentation	JM Belen	QA testing, documentation, user manual, presentation, bug reporting	70%
+## Project Team Structure
 
-Detailed Team Roles
+Project Lead (M1)
 
-Member:
+Frontend Development (M2)
 
-Nhica Valderas
+Database Engineering (M3)
 
-Responsibilities
-Managed the overall project workflow
-Configured project structure using React + Vite
-Initialized Supabase connection
-Managed GitHub branches and PR workflow
-Configured Vercel deployment
-Wired backend API services
-Key Contributions
-Protected routes setup
-Deployment configuration
-API service integration
-Branch protection rules
-Production deployment
-Current Remaining Tasks
-Activate team accounts in Supabase
-Merge dev → main
-Verify production authentication
-Wire real user data into Navbar
+Rights & Authentication (M4)
 
-M2 — Frontend Developer
-Member:
+QA & Documentation (M5)
 
-Jovin Lowell Dula
 
-Responsibilities
-Developed the complete frontend UI
-Built Employee, Jobs, Departments, and Admin pages
-Integrated Supabase APIs into frontend
-Implemented rights-based UI gating
-Improved UI/UX design
-Key Contributions
-Employee Detail Page
-Job History Panel
-Admin Management Page
-Login page redesign
-CRUD button rights gating
-Current Remaining Tasks
-Hide Stamp column for USER role
-Verify rights gating with live accounts
-Replace hardcoded Navbar user data
+## Team Members
 
-M3 — Database Engineer
-Member:
+| Member            | Role                             | Main Responsibilities                                                              |
+| ----------------- | -------------------------------- | ---------------------------------------------------------------------------------- |
+| Nhica Valderas    | **M1 — Project Lead**            | Project management, deployment, API integration, GitHub management, Supabase setup |
+| Jovin Lowell Dula | **M2 — Frontend Developer**      | UI/UX development, frontend pages, API wiring, CRUD interfaces, rights gating      |
+| Jhunelle Remo     | **M3 — Database Engineer**       | Database schema, RLS policies, triggers, Supabase backend, rights tables           |
+| Salim Sahipa      | **M4 — Rights & Authentication** | Google OAuth, AuthContext, role permissions, protected routes, rights loading      |
+| JM Belen          | **M5 — QA & Documentation**      | QA testing, bug reporting, user manual, sprint logs, presentation, test cases      |
 
-Jhunelle Remo
+1. Project Overview
+2. Features
+3. Tech Stack
+4. Team Members & Roles
+5. System Roles
+6. Installation
+7. Environment Variables
+8. Project Structure
+9. QA Testing
+10. Deployment
+11. Screenshots
+12. Future Improvements
+13. License
 
-Responsibilities
-Designed database schema
-Created Row Level Security (RLS) policies
-Implemented database triggers
-Managed user rights schema
-Added verification scripts
-Key Contributions
-Employee RLS
-Job History RLS
-Department RLS
-Soft-delete cascade triggers
-User rights schema
-Report views
+## Team Members & Roles
 
-M4 — Rights & Authentication
-Member:
-
-Salim Sahipa
-
-Responsibilities
-Built authentication system
-Developed AuthContext
-Implemented role-based permissions
-Configured Google OAuth
-Managed rights loading
-Key Contributions
-AuthContext completion
-useRights() hook
-Login guards
-Google OAuth integration
-Rights loading system
-Current Remaining Tasks
-Test OAuth flow end-to-end
-Verify SUPERADMIN protection
-Replace Navbar placeholder user data
-
-M5 — QA & Documentation
-Member:
-
-JM Belen
-
-Responsibilities
-Performed QA testing
-Created testing documentation
-Wrote sprint logs
-Prepared user manual
-Created final presentation
-Reported bugs and validation issues
-Key Contributions
-51-case rights matrix testing
-Production E2E checklist
-QA documentation
-Test case tracking
-Current Remaining Tasks
-Run all 51 test cases with activated accounts
-Finalize QA reports
-Complete user manual
-Finish presentation slides
+| Member | Role | Responsibilities |
+|---|---|---|
+| Nhica Valderas | M1 — Project Lead | Deployment, APIs, GitHub workflow |
+| Jovin Lowell Dula | M2 — Frontend Developer | UI/UX, frontend pages, CRUD |
+| Jhunelle Remo | M3 — Database Engineer | Database schema, RLS, triggers |
+| Shpsall | M4 — Rights & Authentication | AuthContext, OAuth, permissions |
+| JM Belen | M5 — QA & Documentation | Testing, documentation, QA |
