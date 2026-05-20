@@ -10,9 +10,9 @@ import { employeeApi } from '../services/api'
 import { useRights } from '../hooks/useRights'
 
 const EMPTY_FORM = { 
-  empno: '', lastname: '', firstname: '', middlename: '', 
+  empno: '', lastname: '', firstname: '', 
   address: '', birthdate: '', hiredate: '', 
-  gender: 'M', status: 'REGULAR'
+  gender: 'M'
 }
 
 export default function EmployeeListPage() {
@@ -178,7 +178,6 @@ export default function EmployeeListPage() {
           <Input label="Employee No." id="empno" {...field('empno')} required />
           <Input label="Last Name" id="lastname" {...field('lastname')} required />
           <Input label="First Name" id="firstname" {...field('firstname')} required />
-          <Input label="Middle Name" id="middlename" {...field('middlename')} />
           <Input label="Birth Date" id="birthdate" type="date" {...field('birthdate')} />
           <Input label="Hire Date" id="hiredate" type="date" {...field('hiredate')} />
           <div className="col-span-2"><Input label="Address" id="address" {...field('address')} /></div>
