@@ -8,7 +8,7 @@ import { useRights } from '../hooks/useRights'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import { jobHistoryApi } from '../services/api'
 
-const EMPTY_FORM = { empno: '', jobCode: '', deptCode: '', effDate: '', salary: '' }
+const EMPTY_FORM = { empno: '', jobcode: '', deptcode: '', effdate: '', salary: '' }
 
 export default function JobHistoryPage() {
   const [history, setHistory] = useState([])
@@ -29,7 +29,7 @@ export default function JobHistoryPage() {
     try {
       setIsLoading(true)
       setError(null)
-      const data = await jobHistoryApi.getByEmployee(filterEmpno || null)
+      const data = await jobHistoryApi.getAll()
       setHistory(data || [])
     } catch (err) {
       setError('Failed to load job history: ' + err.message)
@@ -65,7 +65,7 @@ export default function JobHistoryPage() {
 
   const handleConfirmDelete = async () => {
     try {
-      await jobHistoryApi.softDelete(deleteTarget.empno, deleteTarget.jobCode, deleteTarget.effDate)
+      await jobHistoryApi.softDelete(deleteTarget.empno, deleteTarget.jobcode, deleteTarget.effdate)
       await loadHistory()
       setShowConfirm(false)
     } catch (err) {
@@ -80,9 +80,9 @@ export default function JobHistoryPage() {
 
   const columns = [
     { key: 'empno', label: 'Emp No.' },
-    { key: 'jobCode', label: 'Job Code' },
-    { key: 'deptCode', label: 'Dept Code' },
-    { key: 'effDate', label: 'Effective Date' },
+    { key: 'jobcode', label: 'Job Code' },
+    { key: 'deptcode', label: 'Dept Code' },
+    { key: 'effdate', label: 'Effective Date' },
     { key: 'salary', label: 'Salary', render: (row) => row.salary ? `₱${Number(row.salary).toLocaleString()}` : '-' },
     ...(isAdmin ? [{
       key: 'stamp', label: 'Last Modified By',
@@ -117,13 +117,10 @@ export default function JobHistoryPage() {
           <p className="text-gray-500">Track employee job assignments</p>
         </div>
         {hasRight('JH_ADD') && (
-  <Button onClick={handleAdd} className="flex items-center gap-2">
-    <Plus className="h-4 w-4" /> Add Record
-  </Button>
-)}
-        <Button onClick={handleAdd} className="flex items-center gap-2">
-          <Plus className="h-4 w-4" /> Add Record
-        </Button>
+          <Button onClick={handleAdd} className="flex items-center gap-2">
+            <Plus className="h-4 w-4" /> Add Record
+          </Button>
+        )}
       </div>
 
       {error && (
@@ -145,9 +142,9 @@ export default function JobHistoryPage() {
         footer={<><Button variant="secondary" onClick={() => setShowModal(false)}>Cancel</Button><Button onClick={handleSave} isLoading={isSaving}>Save</Button></>}>
         <div className="grid grid-cols-2 gap-4">
           <Input label="Employee No." id="empno" {...field('empno')} required />
-          <Input label="Job Code" id="jobCode" {...field('jobCode')} required />
-          <Input label="Dept Code" id="deptCode" {...field('deptCode')} required />
-          <Input label="Effective Date" id="effDate" type="date" {...field('effDate')} required />
+          <Input label="Job Code" id="jobcode" {...field('jobcode')} required />
+          <Input label="Dept Code" id="deptcode" {...field('deptcode')} required />
+          <Input label="Effective Date" id="effdate" type="date" {...field('effdate')} required />
           <div className="col-span-2">
             <Input label="Salary" id="salary" type="number" {...field('salary')} />
           </div>
@@ -156,7 +153,7 @@ export default function JobHistoryPage() {
 
       <Modal isOpen={showConfirm} onClose={() => setShowConfirm(false)} title="Confirm Delete" size="sm"
         footer={<><Button variant="secondary" onClick={() => setShowConfirm(false)}>Cancel</Button><Button variant="danger" onClick={handleConfirmDelete}>Delete</Button></>}>
-        <p className="text-gray-600">Delete job history for <strong>{deleteTarget?.empno}</strong> effective <strong>{deleteTarget?.effDate}</strong>?</p>
+        <p className="text-gray-600">Delete job history for <strong>{deleteTarget?.empno}</strong> effective <strong>{deleteTarget?.effdate}</strong>?</p>
       </Modal>
     </div>
   )

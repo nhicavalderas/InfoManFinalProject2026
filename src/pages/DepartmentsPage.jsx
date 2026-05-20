@@ -72,7 +72,7 @@ export default function DepartmentsPage() {
 
   const columns = [
     { key: 'deptCode', label: 'Dept Code' },
-    { key: 'deptName', label: 'Department Name' },
+    { key: 'deptname', label: 'Department Name' },
     ...(isAdmin ? [{
       key: 'stamp', label: 'Last Modified By',
       render: (row) => <span className="text-xs text-gray-400">{row.stamp || '—'}</span>
