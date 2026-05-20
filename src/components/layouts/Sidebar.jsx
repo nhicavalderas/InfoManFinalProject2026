@@ -1,4 +1,4 @@
-import { Users, Clock, Briefcase, Building2, Shield, Trash2 } from 'lucide-react'
+import { Users, Clock, Briefcase, Building2, Shield, Trash2, BarChart2 } from 'lucide-react'
 import { useRights } from '../../hooks/useRights'
 
 const NAV_ITEMS = [
@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { id: 'jobhistory', label: 'Job History', icon: Clock },
   { id: 'jobs', label: 'Jobs', icon: Briefcase },
   { id: 'departments', label: 'Departments', icon: Building2 },
+  { id: 'reports', label: 'Reports', icon: BarChart2 },
   { id: 'admin', label: 'Admin', icon: Shield, adminOnly: true },
   { id: 'deleted-items', label: 'Deleted Items', icon: Trash2, adminOnly: true },
 ]

@@ -13,13 +13,13 @@ import JobsPage from './pages/JobsPage'
 import DepartmentsPage from './pages/DepartmentsPage'
 import AdminPage from './pages/AdminPage'
 import DeletedItemsPage from './pages/DeletedItemsPage'
+import ReportsPage from './pages/ReportsPage'
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/login" replace />} />
-
         {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -27,16 +27,17 @@ function App() {
 
         {/* Protected Routes — wrapped in AppShell for Navbar + Sidebar */}
         <Route element={<ProtectedRoute />}>
-          <Route element={<AppShell />}>
-            <Route path="/employees" element={<EmployeeListPage />} />
-            <Route path="/employees/:empno" element={<EmployeeDetailPage />} />
-            <Route path="/jobhistory" element={<JobHistoryPage />} />
-            <Route path="/jobs" element={<JobsPage />} />
-            <Route path="/departments" element={<DepartmentsPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-            <Route path="/deleted-items" element={<DeletedItemsPage />} />
-          </Route>
-        </Route>
+  <Route element={<AppShell />}>
+    <Route path="/employees" element={<EmployeeListPage />} />
+    <Route path="/employees/:empno" element={<EmployeeDetailPage />} />
+    <Route path="/jobhistory" element={<JobHistoryPage />} />
+    <Route path="/jobs" element={<JobsPage />} />
+    <Route path="/departments" element={<DepartmentsPage />} />
+    <Route path="/admin" element={<AdminPage />} />
+    <Route path="/deleted-items" element={<DeletedItemsPage />} />
+    <Route path="/reports" element={<ReportsPage />} />
+  </Route>
+</Route>
       </Routes>
     </BrowserRouter>
   )
