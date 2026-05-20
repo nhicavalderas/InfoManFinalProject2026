@@ -72,7 +72,6 @@ export default function JobsPage() {
 
   const columns = [
     { key: 'jobCode', label: 'Job Code' },
-    { key: 'jobTitle', label: 'Job Title' },
     { key: 'jobDesc', label: 'Description' },
     ...(isAdmin ? [{
       key: 'stamp', label: 'Last Modified By',
