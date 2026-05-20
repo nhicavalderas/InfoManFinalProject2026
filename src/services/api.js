@@ -151,18 +151,17 @@ export const adminApi = {
 // TODO: M1 — Reports API functions
 export const reportsApi = {
   getHeadcountByDept: async () => {
-    const { data, error } = await supabase.from('headcount_by_dept').select('*')
+    const { data, error } = await supabase.from('headcount_by_dept').select('*').order('activeheadcount', { ascending: false })
     if (error) throw error
     return data
   },
   getSalarySummaryByJob: async () => {
-    const { data, error } = await supabase.from('salary_summary_by_job').select('*')
+    const { data, error } = await supabase.from('salary_summary_by_job').select('*').order('avgsalary', { ascending: false })
     if (error) throw error
     return data
   },
   getEmployeeFullHistory: async (empNo) => {
-    const { data, error } = await supabase.from('jobhistory')
-      .select('*').eq('empno', empNo)
+    const { data, error } = await supabase.from('jobhistory').select('*').eq('empno', empNo)
     if (error) throw error
     return data
   },
