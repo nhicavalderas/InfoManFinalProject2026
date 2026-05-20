@@ -1,45 +1,59 @@
-Hope HR System
+## Project Overview
 
-The Hope HR System is a web-based Human Resource Management System designed to manage employees,
-departments, jobs, and user access through role-based authentication.
+The Hope HR System is a web-based application designed to streamline HR operations, including:
 
-## Features
+## Employee management
 
-Employee Management
+Job history tracking
 
-Job & Department Management
+Department and job management
 
-Job History Tracking
+Role-based access control (Admin, Superadmin, User)
 
-Google OAuth Login
+Authentication via Google OAuth
 
-Role-Based Access Control
+## Project Progress
 
-Admin Dashboard
+70+ Pull Requests merged
 
-Soft Delete & Recovery
+All 3 Sprints completed
 
-Tech Stack
+All roles (M1–M5) at 100% completion
 
-React
+Fully deployed and functional
 
-Vite
+## Team Members
 
-Tailwind CSS
+| Role               | Name              | Responsibility                         |
+| ------------------ | ----------------- | -------------------------------------- |
+| M1 — Project Lead  | Nhica Valderas    | Project setup, deployment, integration |
+| M2 — Frontend Dev  | Jovin Lowell Dula | UI, API integration, fixes             |
+| M3 — DB Engineer   | Jhunelle Remo     | Database schema, RLS, triggers         |
+| M4 — Rights & Auth | Salim Sahipa      | Authentication & authorization         |
+| M5 — QA & Docs     | JM Belen          | Testing, documentation                 |
 
-Supabase
+## Key Fixes & Improvements
 
-Vercel
+Fixed Vercel routing (404 on refresh)
 
-## Team Members & Progress
+Resolved merge conflicts and deployment issues
 
-| Member            | Role                    | Progress |
-| ----------------- | ----------------------- | -------- |
-| Nhica Valderas    | Project Lead            | 90%      |
-| Jovin Lowell Dula | Frontend Developer      | 100%     |
-| Jhunelle Remo     | Database Engineer       | 98%      |
-| Salim sahipa      | Rights & Authentication | 80%      |
-| JM Belen          | QA & Documentation      | 70%      |
+Synced all user IDs in database
 
+Fixed UI crashes and reference errors
 
+Implemented sortable tables
 
+Applied full role-based UI restrictions
+
+Seeded database for demo readiness
+
+## System Status
+
+Fully functional on production
+
+All modules working
+
+No open pull requests
+
+Ready for presentation
