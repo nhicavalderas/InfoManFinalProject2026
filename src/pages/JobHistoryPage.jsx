@@ -15,6 +15,8 @@ export default function JobHistoryPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [filterEmpno, setFilterEmpno] = useState('')
+  const [sortKey, setSortKey] = useState('effdate')
+  const [sortDir, setSortDir] = useState('desc')
   const [showModal, setShowModal] = useState(false)
   const [editTarget, setEditTarget] = useState(null)
   const [form, setForm] = useState(EMPTY_FORM)
@@ -42,6 +44,25 @@ export default function JobHistoryPage() {
     ? history.filter(h => h.empno?.toLowerCase().includes(filterEmpno.toLowerCase()))
     : history
 
+  const handleSort = (key) => {
+    if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+    else { setSortKey(key); setSortDir('asc') }
+  }
+
+  const sorted = [...filtered].sort((a, b) => {
+    if (!sortKey) return 0
+    const av = a[sortKey] ?? ''
+    const bv = b[sortKey] ?? ''
+    if (sortKey === 'salary') return sortDir === 'asc' ? Number(av) - Number(bv) : Number(bv) - Number(av)
+    return sortDir === 'asc' ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av))
+  })
+
+  const SortLabel = ({ col, label }) => (
+    <span onClick={() => handleSort(col)} className="cursor-pointer hover:text-hope-600 select-none">
+      {label} {sortKey === col ? (sortDir === 'asc' ? '↑' : '↓') : '↕'}
+    </span>
+  )
+
   const handleAdd = () => { setEditTarget(null); setForm(EMPTY_FORM); setShowModal(true) }
   const handleEdit = (row) => { setEditTarget(row); setForm({ ...row }); setShowModal(true) }
   const handleDelete = (row) => { setDeleteTarget(row); setShowConfirm(true) }
@@ -49,11 +70,8 @@ export default function JobHistoryPage() {
   const handleSave = async () => {
     try {
       setIsSaving(true)
-      if (editTarget) {
-        await jobHistoryApi.update(form)
-      } else {
-        await jobHistoryApi.add(form)
-      }
+      if (editTarget) { await jobHistoryApi.update(form) }
+      else { await jobHistoryApi.add(form) }
       await loadHistory()
       setShowModal(false)
     } catch (err) {
@@ -79,11 +97,11 @@ export default function JobHistoryPage() {
   })
 
   const columns = [
-    { key: 'empno', label: 'Emp No.' },
-    { key: 'jobcode', label: 'Job Code' },
-    { key: 'deptcode', label: 'Dept Code' },
-    { key: 'effdate', label: 'Effective Date' },
-    { key: 'salary', label: 'Salary', render: (row) => row.salary ? `₱${Number(row.salary).toLocaleString()}` : '-' },
+    { key: 'empno', label: <SortLabel col="empno" label="Emp No." /> },
+    { key: 'jobcode', label: <SortLabel col="jobcode" label="Job Code" /> },
+    { key: 'deptcode', label: <SortLabel col="deptcode" label="Dept Code" /> },
+    { key: 'effdate', label: <SortLabel col="effdate" label="Effective Date" /> },
+    { key: 'salary', label: <SortLabel col="salary" label="Salary" />, render: (row) => row.salary ? `₱${Number(row.salary).toLocaleString()}` : '-' },
     ...(isAdmin ? [{
       key: 'stamp', label: 'Last Modified By',
       render: (row) => <span className="text-xs text-gray-400">{row.stamp || '—'}</span>
@@ -135,7 +153,7 @@ export default function JobHistoryPage() {
           className="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" />
       </div>
 
-      <Table columns={columns} data={filtered} emptyMessage="No job history found" keyExtractor={(r, i) => i} />
+      <Table columns={columns} data={sorted} emptyMessage="No job history found" keyExtractor={(r, i) => i} />
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}
         title={editTarget ? 'Edit Job History' : 'Add Job History'}
