@@ -18,6 +18,8 @@ export default function EmployeeListPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
   const [search, setSearch] = useState('')
+  const [sortKey, setSortKey] = useState(null)
+  const [sortDir, setSortDir] = useState('asc')
   const [showModal, setShowModal] = useState(false)
   const [editTarget, setEditTarget] = useState(null)
   const [form, setForm] = useState(EMPTY_FORM)
@@ -46,6 +48,24 @@ export default function EmployeeListPage() {
     e.empno?.toLowerCase().includes(search.toLowerCase())
   )
 
+  const handleSort = (key) => {
+    if (sortKey === key) setSortDir(d => d === 'asc' ? 'desc' : 'asc')
+    else { setSortKey(key); setSortDir('asc') }
+  }
+
+  const sorted = [...filtered].sort((a, b) => {
+    if (!sortKey) return 0
+    const av = a[sortKey] ?? ''
+    const bv = b[sortKey] ?? ''
+    return sortDir === 'asc' ? String(av).localeCompare(String(bv)) : String(bv).localeCompare(String(av))
+  })
+
+  const SortLabel = ({ col, label }) => (
+    <span onClick={() => handleSort(col)} className="cursor-pointer hover:text-hope-600 select-none">
+      {label} {sortKey === col ? (sortDir === 'asc' ? '↑' : '↓') : '↕'}
+    </span>
+  )
+
   const handleAdd = () => { setEditTarget(null); setForm(EMPTY_FORM); setShowModal(true) }
   const handleEdit = (row) => { setEditTarget(row); setForm({ ...row }); setShowModal(true) }
   const handleDelete = (row) => { setDeleteTarget(row); setShowConfirm(true) }
@@ -53,11 +73,8 @@ export default function EmployeeListPage() {
   const handleSave = async () => {
     try {
       setIsSaving(true)
-      if (editTarget) {
-        await employeeApi.update(editTarget.empno, form)
-      } else {
-        await employeeApi.add(form)
-      }
+      if (editTarget) { await employeeApi.update(editTarget.empno, form) }
+      else { await employeeApi.add(form) }
       await loadEmployees()
       setShowModal(false)
     } catch (err) {
@@ -83,11 +100,11 @@ export default function EmployeeListPage() {
   })
 
   const columns = [
-    { key: 'empno', label: 'Emp No.' },
-    { key: 'lastname', label: 'Last Name' },
-    { key: 'firstname', label: 'First Name' },
-    { key: 'deptcode', label: 'Department' },
-    { key: 'jobcode', label: 'Job Code' },
+    { key: 'empno', label: <SortLabel col="empno" label="Emp No." /> },
+    { key: 'lastname', label: <SortLabel col="lastname" label="Last Name" /> },
+    { key: 'firstname', label: <SortLabel col="firstname" label="First Name" /> },
+    { key: 'deptcode', label: <SortLabel col="deptcode" label="Department" /> },
+    { key: 'jobcode', label: <SortLabel col="jobcode" label="Job Code" /> },
     {
       key: 'record_status', label: 'Status',
       render: (row) => (
@@ -147,7 +164,7 @@ export default function EmployeeListPage() {
           className="w-full max-w-sm px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-200" />
       </div>
 
-      <Table columns={columns} data={filtered} emptyMessage="No employees found"
+      <Table columns={columns} data={sorted} emptyMessage="No employees found"
         keyExtractor={r => r.empno} onRowClick={(row) => navigate(`/employees/${row.empno}`)} />
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}
@@ -187,4 +204,4 @@ export default function EmployeeListPage() {
       </Modal>
     </div>
   )
-}
+}W
