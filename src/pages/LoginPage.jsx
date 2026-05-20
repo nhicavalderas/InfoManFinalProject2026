@@ -1,45 +1,77 @@
+/**
+ * LoginPage.jsx - User Login Page
+ * 
+ * PURPOSE:
+ * - Allows existing users to log in via email/password
+ * - Also supports Google OAuth login
+ * - After successful login, redirects to employees page
+ * - INACTIVE users are blocked by the login guard in AuthContext
+ */
+
 import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import LoginForm from '../components/auth/LoginForm'
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState(null)
+  // ========== STATE VARIABLES ==========
+  const [isLoading, setIsLoading] = useState(false)  // Show loading spinner during login
+  const [error, setError] = useState(null)           // Store error messages from failed login
+  const navigate = useNavigate()                      // For redirecting after successful login
+  
+  // Get auth functions from AuthContext
   const { login, loginWithGoogle } = useAuth()
 
+  /**
+   * handleEmailSubmit - Process email/password login
+   * Called when user submits the login form
+   * @param {object} param - Contains email and password from the form
+   */
   const handleEmailSubmit = async ({ email, password }) => {
+    // Show loading state and clear previous errors
     setIsLoading(true)
     setError(null)
-    const { error } = await login(email, password)
-    if (error) setError(error.message)
+    
+    // Call Supabase signInWithPassword function
+    const { error: loginError } = await login(email, password)
+    
+    // Handle any errors from Supabase (wrong password, user not found, etc.)
+    if (loginError) {
+      setError(loginError.message)
+    } else {
+      // On success, redirect to employees page
+      navigate('/employees')
+    }
+    
     setIsLoading(false)
   }
 
-  const handleGoogleClick = () => loginWithGoogle()
+  /**
+   * handleGoogleClick - Initiate Google OAuth login
+   * Redirects to Google's OAuth consent screen, then back to /auth/callback
+   */
+  const handleGoogleClick = () => {
+    loginWithGoogle()
+  }
 
+  // ========== RENDER LOGIN FORM ==========
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-slate-50 via-hope-50 to-slate-100">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-hope-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-float" />
-        <div className="absolute top-40 right-20 w-96 h-96 bg-hope-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute -bottom-8 left-1/3 w-80 h-80 bg-hope-100 rounded-full mix-blend-multiply filter blur-xl opacity-40 animate-float" style={{ animationDelay: '4s' }} />
-      </div>
-
-      <div className="relative z-10 w-full max-w-md px-6 animate-slide-up">
-        {/* Logo */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-hope-500 to-hope-700 rounded-2xl shadow-glow mb-6 transform transition-transform hover:scale-105 duration-300">
-            <svg className="w-10 h-10 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z" />
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <div className="w-full max-w-md">
+        {/* Header section with logo and welcome message */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-2xl mb-4">
+            {/* HR icon SVG - represents Human Resources */}
+            <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
           </div>
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight mb-2">Welcome back</h1>
           <p className="text-slate-500 text-lg">Sign in to your <span className="font-semibold text-hope-600">Hope HR</span> account</p>
         </div>
 
-        {/* Card */}
-        <div className="bg-white/80 backdrop-blur-xl rounded-2xl shadow-glass border border-white/50 p-8">
+        {/* Login form component - handles email/password and Google button */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <LoginForm
             onEmailSubmit={handleEmailSubmit}
             onGoogleClick={handleGoogleClick}
@@ -48,11 +80,12 @@ export default function LoginPage() {
           />
         </div>
 
-        <p className="text-center mt-8 text-sm text-slate-500">
+        {/* Link to registration page for new users */}
+        <p className="text-center mt-6 text-sm text-gray-600">
           Don't have an account?{' '}
-          <a href="/register" className="text-hope-600 hover:text-hope-700 font-semibold transition-colors hover:underline underline-offset-2">
+          <Link to="/register" className="text-blue-600 hover:text-blue-700 font-medium">
             Register here
-          </a>
+          </Link>
         </p>
 
         <div className="flex items-center justify-center gap-2 mt-6 text-xs text-slate-400">

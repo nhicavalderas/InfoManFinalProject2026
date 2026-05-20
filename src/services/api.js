@@ -130,16 +130,16 @@ export const adminApi = {
     if (error) throw error
     return data
   },
-  activateUser: async (userId) => {
+  activateUser: async (userid) => {
     const { error } = await supabase.from('user')
       .update({ record_status: 'ACTIVE' })
-      .eq('userId', userId).neq('user_type', 'SUPERADMIN')
+      .eq('userid', userid).neq('user_type', 'SUPERADMIN')
     if (error) throw error
   },
-  deactivateUser: async (userId) => {
+  deactivateUser: async (userid) => {
     const { error } = await supabase.from('user')
       .update({ record_status: 'INACTIVE' })
-      .eq('userId', userId).neq('user_type', 'SUPERADMIN')
+      .eq('userid', userid).neq('user_type', 'SUPERADMIN')
     if (error) throw error
   },
 }
