@@ -7,7 +7,7 @@ export const supabase = createClient(supabaseUrl, supabaseKey)
 // TODO: M1 — Employee API functions
 export const employeeApi = {
   getAll: async (userType) => {
-    let query = supabase.from('employee').select('*')
+    let query = supabase.from('employee_current_job').select('*')
     if (userType === 'USER') query = query.eq('record_status', 'ACTIVE')
     const { data, error } = await query
     if (error) throw error

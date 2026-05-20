@@ -86,14 +86,14 @@ export default function EmployeeListPage() {
     { key: 'empno', label: 'Emp No.' },
     { key: 'lastname', label: 'Last Name' },
     { key: 'firstname', label: 'First Name' },
-    { key: 'deptCode', label: 'Department' },
-    { key: 'jobCode', label: 'Job Code' },
+    { key: 'deptcode', label: 'Department' },
+    { key: 'jobcode', label: 'Job Code' },
     {
-      key: 'status', label: 'Status',
+      key: 'record_status', label: 'Status',
       render: (row) => (
         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-          row.status === 'REGULAR' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-        }`}>{row.status}</span>
+          row.record_status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+        }`}>{row.record_status}</span>
       )
     },
     ...(isAdmin ? [{
