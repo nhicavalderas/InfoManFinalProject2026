@@ -42,6 +42,11 @@ export const jobHistoryApi = {
     if (error) throw error
     return data
   },
+  getAll: async () => {
+    const { data, error } = await supabase.from('jobhistory').select('*').eq('record_status', 'ACTIVE')
+    if (error) throw error
+    return data
+  },
   add: async (data) => {
     const { error } = await supabase.from('jobhistory').insert(data)
     if (error) throw error
