@@ -9,7 +9,12 @@ import { Plus, Pencil, Trash2 } from 'lucide-react'
 import { employeeApi } from '../services/api'
 import { useRights } from '../hooks/useRights'
 
-const EMPTY_FORM = { empno: '', lastname: '', firstname: '', middlename: '', address: '', birthdate: '', hiredate: '', gender: 'M', status: 'REGULAR', deptCode: '', jobCode: '' }
+const EMPTY_FORM = { 
+  empno: '', lastname: '', firstname: '', middlename: '', 
+  address: '', birthdate: '', hiredate: '', 
+  gender: 'M', status: 'REGULAR', 
+  deptcode: '', jobcode: '' 
+}
 
 export default function EmployeeListPage() {
   const navigate = useNavigate()
@@ -193,8 +198,8 @@ export default function EmployeeListPage() {
               <option value="CONTRACTUAL">Contractual</option>
             </select>
           </div>
-          <Input label="Dept Code" id="deptCode" {...field('deptCode')} />
-          <Input label="Job Code" id="jobCode" {...field('jobCode')} />
+          <Input label="Dept Code" id="deptcode" {...field('deptcode')} />
+<Input label="Job Code" id="jobcode" {...field('jobcode')} />
         </div>
       </Modal>
 
