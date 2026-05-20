@@ -74,19 +74,24 @@ export default function EmployeeListPage() {
   const handleEdit = (row) => { setEditTarget(row); setForm({ ...row }); setShowModal(true) }
   const handleDelete = (row) => { setDeleteTarget(row); setShowConfirm(true) }
 
-  const handleSave = async () => {
-    try {
-      setIsSaving(true)
-      if (editTarget) { await employeeApi.update(editTarget.empno, form) }
-      else { await employeeApi.add(form) }
-      await loadEmployees()
-      setShowModal(false)
-    } catch (err) {
-      alert('Error saving: ' + err.message)
-    } finally {
-      setIsSaving(false)
+ const handleSave = async () => {
+  try {
+    setIsSaving(true)
+    const cleanForm = {
+      ...form,
+      birthdate: form.birthdate || null,
+      hiredate: form.hiredate || null,
     }
+    if (editTarget) { await employeeApi.update(editTarget.empno, cleanForm) }
+    else { await employeeApi.add(cleanForm) }
+    await loadEmployees()
+    setShowModal(false)
+  } catch (err) {
+    alert('Error saving: ' + err.message)
+  } finally {
+    setIsSaving(false)
   }
+}
 
   const handleConfirmDelete = async () => {
     try {
