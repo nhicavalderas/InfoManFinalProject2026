@@ -10,9 +10,9 @@ import { employeeApi } from '../services/api'
 import { useRights } from '../hooks/useRights'
 
 const EMPTY_FORM = { 
-  empno: '', lastname: '', firstname: '', middlename: '', 
+  empno: '', lastname: '', firstname: '', 
   address: '', birthdate: '', hiredate: '', 
-  gender: 'M', status: 'REGULAR'
+  gender: 'M'
 }
 
 export default function EmployeeListPage() {
@@ -74,19 +74,24 @@ export default function EmployeeListPage() {
   const handleEdit = (row) => { setEditTarget(row); setForm({ ...row }); setShowModal(true) }
   const handleDelete = (row) => { setDeleteTarget(row); setShowConfirm(true) }
 
-  const handleSave = async () => {
-    try {
-      setIsSaving(true)
-      if (editTarget) { await employeeApi.update(editTarget.empno, form) }
-      else { await employeeApi.add(form) }
-      await loadEmployees()
-      setShowModal(false)
-    } catch (err) {
-      alert('Error saving: ' + err.message)
-    } finally {
-      setIsSaving(false)
+ const handleSave = async () => {
+  try {
+    setIsSaving(true)
+    const cleanForm = {
+      ...form,
+      birthdate: form.birthdate || null,
+      hiredate: form.hiredate || null,
     }
+    if (editTarget) { await employeeApi.update(editTarget.empno, cleanForm) }
+    else { await employeeApi.add(cleanForm) }
+    await loadEmployees()
+    setShowModal(false)
+  } catch (err) {
+    alert('Error saving: ' + err.message)
+  } finally {
+    setIsSaving(false)
   }
+}
 
   const handleConfirmDelete = async () => {
     try {
@@ -178,7 +183,6 @@ export default function EmployeeListPage() {
           <Input label="Employee No." id="empno" {...field('empno')} required />
           <Input label="Last Name" id="lastname" {...field('lastname')} required />
           <Input label="First Name" id="firstname" {...field('firstname')} required />
-          <Input label="Middle Name" id="middlename" {...field('middlename')} />
           <Input label="Birth Date" id="birthdate" type="date" {...field('birthdate')} />
           <Input label="Hire Date" id="hiredate" type="date" {...field('hiredate')} />
           <div className="col-span-2"><Input label="Address" id="address" {...field('address')} /></div>
