@@ -12,8 +12,7 @@ import { useRights } from '../hooks/useRights'
 const EMPTY_FORM = { 
   empno: '', lastname: '', firstname: '', middlename: '', 
   address: '', birthdate: '', hiredate: '', 
-  gender: 'M', status: 'REGULAR', 
-  deptcode: '', jobcode: '' 
+  gender: 'M', status: 'REGULAR'
 }
 
 export default function EmployeeListPage() {
@@ -198,8 +197,6 @@ export default function EmployeeListPage() {
               <option value="CONTRACTUAL">Contractual</option>
             </select>
           </div>
-          <Input label="Dept Code" id="deptcode" {...field('deptcode')} />
-<Input label="Job Code" id="jobcode" {...field('jobcode')} />
         </div>
       </Modal>
 
