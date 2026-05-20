@@ -6,10 +6,12 @@ import Input from '../components/common/Input'
 import LoadingSpinner from '../components/common/LoadingSpinner'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import { deptApi } from '../services/api'
+import { useRights } from '../hooks/useRights'
 
 const EMPTY_FORM = { deptCode: '', deptName: '' }
 
 export default function DepartmentsPage() {
+  const { hasRight, isAdmin } = useRights()
   const [depts, setDepts] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -42,11 +44,8 @@ export default function DepartmentsPage() {
   const handleSave = async () => {
     try {
       setIsSaving(true)
-      if (editTarget) {
-        await deptApi.update(editTarget.deptCode, form)
-      } else {
-        await deptApi.add(form)
-      }
+      if (editTarget) { await deptApi.update(editTarget.deptCode, form) }
+      else { await deptApi.add(form) }
       await loadDepts()
       setShowModal(false)
     } catch (err) {
@@ -74,18 +73,24 @@ export default function DepartmentsPage() {
   const columns = [
     { key: 'deptCode', label: 'Dept Code' },
     { key: 'deptName', label: 'Department Name' },
+    ...(isAdmin ? [{
+      key: 'stamp', label: 'Last Modified By',
+      render: (row) => <span className="text-xs text-gray-400">{row.stamp || '—'}</span>
+    }] : []),
     {
       key: 'actions', label: 'Actions',
       render: (row) => (
         <div className="flex gap-2">
-          {/* TODO: M4 — gate by DEPT_EDIT */}
-          <button onClick={(e) => { e.stopPropagation(); handleEdit(row) }} className="p-1 text-blue-600 hover:bg-blue-50 rounded">
-            <Pencil className="h-4 w-4" />
-          </button>
-          {/* TODO: M4 — gate by DEPT_DEL */}
-          <button onClick={(e) => { e.stopPropagation(); handleDelete(row) }} className="p-1 text-red-600 hover:bg-red-50 rounded">
-            <Trash2 className="h-4 w-4" />
-          </button>
+          {hasRight('DEPT_EDIT') && (
+            <button onClick={(e) => { e.stopPropagation(); handleEdit(row) }} className="p-1 text-blue-600 hover:bg-blue-50 rounded">
+              <Pencil className="h-4 w-4" />
+            </button>
+          )}
+          {hasRight('DEPT_DEL') && (
+            <button onClick={(e) => { e.stopPropagation(); handleDelete(row) }} className="p-1 text-red-600 hover:bg-red-50 rounded">
+              <Trash2 className="h-4 w-4" />
+            </button>
+          )}
         </div>
       )
     }
@@ -100,10 +105,11 @@ export default function DepartmentsPage() {
           <h1 className="text-2xl font-bold text-gray-900">Departments</h1>
           <p className="text-gray-500">Manage department codes</p>
         </div>
-        {/* TODO: M4 — gate by DEPT_ADD */}
-        <Button onClick={handleAdd} className="flex items-center gap-2">
-          <Plus className="h-4 w-4" /> Add Department
-        </Button>
+        {hasRight('DEPT_ADD') && (
+          <Button onClick={handleAdd} className="flex items-center gap-2">
+            <Plus className="h-4 w-4" /> Add Department
+          </Button>
+        )}
       </div>
 
       {error && (
