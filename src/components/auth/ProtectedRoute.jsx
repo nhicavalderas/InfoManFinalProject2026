@@ -1,28 +1,19 @@
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import { supabase } from '../../services/api'
+import { useAuth } from '../../context/AuthContext'
 
 function ProtectedRoute() {
-  const [session, setSession] = useState(undefined)
+  const { userRow, isLoading } = useAuth()
   const location = useLocation()
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-    })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session)
-    })
-    return () => subscription.unsubscribe()
-  }, [])
+  if (isLoading) return <div>Loading...</div>
+  if (!userRow) return <Navigate to="/login" replace />
 
-  if (session === undefined) return <div>Loading...</div>
-  if (!session) return <Navigate to="/login" replace />
+  const userType = userRow?.user_type || 'USER'
 
-  const userType = session?.user?.user_metadata?.user_type || 'USER'
   if (location.pathname === '/deleted-items' && userType === 'USER') {
     return <Navigate to="/employees" replace />
   }
+
   return <Outlet />
 }
 
