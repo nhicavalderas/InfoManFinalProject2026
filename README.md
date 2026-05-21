@@ -14,7 +14,7 @@ Authentication via Google OAuth
 
 ## Project Progress
 
-70+ Pull Requests merged
+80+ Pull Requests merged
 
 All 3 Sprints completed
 
@@ -57,3 +57,9 @@ All modules working
 No open pull requests
 
 Ready for presentation
+
+## LIVE DEPLOYMENT
+
+https://info-man-final-project2026.vercel.app/login
+
+https://github.com/nhicavalderas/InfoManFinalProject2026
